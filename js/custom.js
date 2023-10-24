@@ -287,6 +287,15 @@ var W3Crm = function(){
 				jQuery('#dz-password').attr('type','password');
 			}
 		});
+
+		jQuery('.show-pass2').on('click',function(){
+			jQuery(this).toggleClass('active');
+			if(jQuery('#dz-password1').attr('type') == 'password'){
+				jQuery('#dz-password1').attr('type','text');
+			}else if(jQuery('#dz-password1').attr('type') == 'text'){
+				jQuery('#dz-password1').attr('type','password');
+			}
+		});
 	}
 
 	

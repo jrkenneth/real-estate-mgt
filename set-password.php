@@ -3,22 +3,38 @@
     //error_reporting(0);
     include("_include/dbconnect.php");
 
-	if(isset($_GET['set-password'])){
-		$_SESSION['user_id'] = $_GET['user-id'];
-		header("Location: set-password.php");
-	}
+	if(!isset($_SESSION['user_id'])){
+		header("Location: login.php");
+	}else{
+		$new_user = $_SESSION['user_id'];
 
-	if(isset($_SESSION['this_user'])){
-		header("Location: index.php");
+		$get_user = "select * from users where user_id='".$new_user."'";
+        $gu_result=mysqli_query($con, $get_user);
+		$gu_row_count = mysqli_num_rows($gu_result);
+		
+		if($gu_row_count == 1){
+			while($row = $gu_result->fetch_assoc()){
+				$first_name=$row['first_name'];
+            	$last_name=$row['last_name'];
+            	$password=$row['password'];
+			}
+			
+			if(empty($password)){
+				$new_password = "";	
+				$confirm_new_password = "";
+				$message = "Welcome ".$first_name." ".$last_name.", kindly set your password to activate and login to your account.";
+			}else{
+				unset($_SESSION["user_id"]);
+				header("Location: login.php");
+			}
+		}else{
+			unset($_SESSION["user_id"]);
+			header("Location: login.php");
+		}
 	}
-
-	$user = "";	
-	$password = "";
-	$message = "Enter your credentials to login to your account.";
 
 	include("_include/route-handlers.php");
 ?>
-
 <!DOCTYPE html>
 <html lang="en" class="h-100">
 
@@ -32,7 +48,7 @@
 	<meta name="description" content="">
 	
 	<!-- PAGE TITLE HERE -->
-	<title>O.BRIGHTON EMPIRE LIMITED - Login</title>
+	<title>O.BRIGHTON EMPIRE LIMITED - Set Password</title>
 	
 	<!-- FAVICONS ICON -->
 	<link rel="shortcut icon" type="image/png" href="images/favicon.png">
@@ -48,17 +64,13 @@
 				<div class="col-lg-6 col-md-12 col-sm-12 mx-auto align-self-center">
 					<div class="login-form">
 						<div class="text-center">
-							<h3 class="title">Login</h3>
+							<h3 class="title">Set Password</h3>
 							<p><?php echo $message; ?></p>
 						</div>
 						<form method="POST">
-							<div class="mb-4">
-								<label class="mb-1 text-dark">Email/User ID</label>
-								<input type="text" name="user" value="<?php echo $user; ?>" class="form-control form-control" placeholder="Enter your Email address or User ID" required>
-							</div>
 							<div class="mb-4 position-relative">
 								<label class="mb-1 text-dark">Password</label>
-								<input type="password" name="password" value="<?php echo $password; ?>" id="dz-password" class="form-control" placeholder="Enter your password" required>
+								<input type="password" name="new_password" value="<?php echo $new_password; ?>" id="dz-password" class="form-control" placeholder="Enter your password" required>
 								<span class="show-pass eye">
 								
 									<i class="fa fa-eye-slash"></i>
@@ -66,13 +78,19 @@
 								
 								</span>
 							</div>
-							<div class="form-row d-flex justify-content-between mt-4 mb-2">
-								<div class="mb-4">
-									<a href="forgot-password.php" class="btn-link text-primary">Forgot Password?</a>
-								</div>
+							<div class="mb-4 position-relative">
+								<label class="mb-1 text-dark">Re-enter password</label>
+								<input type="password" name="confirm_new_password" value="<?php echo $confirm_new_password; ?>" id="dz-password1" class="form-control" placeholder="Confirm your password" required>
+								<span class="show-pass2 eye">
+								
+									<i class="fa fa-eye-slash"></i>
+									<i class="fa fa-eye"></i>
+								
+								</span>
 							</div>
 							<div class="text-center mb-4">
-								<button type="submit" name="login" class="btn btn-primary btn-block">Sign In</button>
+								<input type="hidden" name="user_id" value="<?php echo $new_user; ?>">
+								<button type="submit" name="set_password" class="btn btn-primary btn-block">Set Password</button>
 							</div>
 						</form>
 					</div>

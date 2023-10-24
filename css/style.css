@@ -25406,6 +25406,15 @@ textarea.form-control {
   .show-pass.active .fa-eye {
     display: inline-block; }
 
+.show-pass2 {
+  cursor: pointer; }
+  .show-pass2 .fa-eye {
+    display: none; }
+  .show-pass2.active .fa-eye-slash {
+    display: none; }
+  .show-pass2.active .fa-eye {
+    display: inline-block; }
+
 .bleft {
   border-top-left-radius: 0.625rem !important;
   border-bottom-left-radius: 0.625rem !important; }
